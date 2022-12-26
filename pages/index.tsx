@@ -1,231 +1,87 @@
+import { Avatar, keyframes, Stack, Typography } from "@mui/material";
 import Head from "next/head";
-import React, { useState } from "react";
-import { styled, useTheme, alpha } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { Avatar, Badge, InputBase, Menu, MenuItem, Stack } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import { AccountCircle } from "@mui/icons-material";
-import SearchIcon from "@mui/icons-material/Search";
-import MoreIcon from "@mui/icons-material/MoreVert";
-import AvatarImage from "../public/avatar.jpg";
-
-const drawerWidth = 240;
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  ...(open && {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
-}));
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+// import /image/loading-left.png from "/image/loading-left.png";
+// import avatar from "/image/avatar.jpg";
+// import /image/loading-right.png from "/image/loading-right.png";
+// import bgImage from "/image/phap_hoa.jpg";
+import style from "../styles/Home.module.css";
 
 export default function Home() {
-  const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const mountedStyle = { opacity: 1, transition: "opacity 500ms ease-in" };
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const leftAnimation = keyframes`
+        0% 
+        {
+            transform: translateX(-90%) translateY(-10%);
+        }
+        100% 
+        {
+            transform: translateX(-94%) translateY(-13%);
+        }
+    `;
+  const rightAnimation = keyframes`
+        0% 
+        {
+            transform: translateX(60%) translateY(50%);
+        }
+        100% 
+        {
+            transform: translateX(63%) translateY(52%);
+        }
+    `;
+  const fireworkAnimation = keyframes`0% { 
+    transform: translate(-50%, 60vh);
+    width: 0.5vmin;
+    opacity: 1;
+  }
+  50% { 
+    width: 0.5vmin;
+    opacity: 1;
+  }
+  100% { 
+    width: 45vmin; 
+    opacity: 0; 
+  }`;
+  useEffect(() => {
+    let p: any = document.querySelector(".newYear");
+    const tet = new Date("1/1/2023 00:00:00").getTime();
+    //Tổng số giây
+    let countDown = setInterval(() => run(), 1000);
+    const run = () => {
+      const now = new Date().getTime();
+      //Số s đến thời gian hiện tại
+      const timeRest = tet - now;
+      //Số s còn lại để đến tết;
+      const day = Math.floor(timeRest / (1000 * 60 * 60 * 24));
+      //Số ngày còn lại
+      const hours = Math.floor(
+        (timeRest % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      // Số giờ còn lại
+      const minute = Math.floor((timeRest % (1000 * 60 * 60)) / (1000 * 60));
+      // Số phút còn lại
+      const sec = Math.floor((timeRest % (1000 * 60)) / 1000);
+      // Số giây còn lại
+      const CheckHour = hours / 10 >= 1 ? hours : "0" + hours;
+      const CheckMinute = minute / 10 >= 1 ? minute : "0" + minute;
+      const CheckSec = sec / 10 >= 1 ? sec : "0" + sec;
+      p.innerHTML =
+        day +
+        " Ngày " +
+        CheckHour +
+        " : " +
+        CheckMinute +
+        " : " +
+        CheckSec +
+        "  ";
+      if (timeRest <= 0 && countDown) {
+        clearInterval(countDown);
+        p.innerHTML = "HPNY";
+      }
+    };
+  }, []);
   return (
     <>
       <Head>
@@ -234,244 +90,146 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
-      <Box sx={{ width: "100vw", display: "flex" }}>
-        <CssBaseline />
-        <AppBar position="fixed" open={open}>
-          <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              sx={{ mr: 2 }}
-              onClick={handleDrawerOpen}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: { xs: "none", sm: "block" } }}
-            >
-              BLUE START
-            </Typography>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Tìm kiếm..."
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
-              >
-                <Badge badgeContent={4} color="error">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="show 17 new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <Avatar alt="Hình ảnh" src={AvatarImage.src} />
-              </IconButton>
-            </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-        {renderMenu}
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-          variant="persistent"
-          anchor="left"
-          open={open}
-        >
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-        <Main open={open}>
-          <DrawerHeader />
+      <Stack
+        sx={{
+          opacity: 1,
+          transition: "opacity 500ms ease-in",
+          touchAction: "manipulation !important",
+          WebkitTouchCallout: "none" /* iOS Safari */,
+          WebkitUserSelect: "none" /* Safari */,
+          KhtmlUserSelect: "none" /* Konqueror HTML */,
+          MozUserSelect: "none" /* Old versions of Firefox */,
+          msUserSelect: "none" /* Internet Explorer/Edge */,
+          userSelect: "none" /* Non-prefixed version, currently
+                                              supported by Chrome, Edge, Opera and Firefox */,
+          position: "relative",
+        }}
+        // className={style.firework}
+      >
+        <Stack className={style.firework}></Stack>
+        <Stack>
           <Stack
-            sx={{ flexDirection: { xs: "column", md: "row" }, height: "88vh" }}
+            sx={[
+              // isMounted ? mountedStyle : unmountedStyle,
+              mountedStyle,
+              {
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                alignItems: "center",
+                justifyContent: "center",
+                background: "#000",
+              },
+            ]}
           >
-            <Stack sx={{ width: { xs: "90vw", md: "70vw" }, height: "100%" }}>
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/U7V5rRYafCw"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+            <Stack
+              sx={{
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 1,
+                flexDirection: "row",
+                borderTop: "1px solid white",
+                borderBottom: "1px solid white",
+                pb: 2,
+                pt: 2,
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "30px",
+                  lineHeight: "20px",
+                  fontWeight: "bold",
+                  color: "white",
+                  pl: 2,
+                  pr: 2,
+                }}
+                className="newYear"
+              ></Typography>
             </Stack>
             <Stack
               sx={{
-                pl: { xs: 0, md: 10 },
-                maxHeight: "100%",
-                overflow: "auto",
-                " &::-webkit-scrollbar": {
-                  width: "3px",
-                  height: "10px",
-                  bgcolor: "black",
-                  cursor: "pointer",
-                },
-                " &::-webkit-scrollbar-thumb": {
-                  background: "silver",
-                  borderRadius: "6px",
-                  width: "6px",
-                  cursor: "pointer",
-                },
-                pt: { xs: 2, md: 0 },
+                width: { xs: "120px", sm: "150px", lg: "250px" },
+                height: { xs: "120px", sm: "150px", lg: "250px" },
+                position: "relative",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Typography paragraph>Có những tháng ngày</Typography>
-              <Typography paragraph>chỉ anh cùng đau buồn</Typography>
-              <Typography paragraph>
-                hoà vào cơn mưa chiều thu héo úa
-              </Typography>
-              <Typography paragraph>viết lên khúc nhạc</Typography>
-              <Typography paragraph>buồn tan tình tan tình</Typography>
-              <Typography paragraph>
-                vội lau nhẹ đi khoé mi sầu cho mình
-              </Typography>
-              <br />
-              <Typography paragraph>Chắc ta quá vội</Typography>
-              <Typography paragraph>trót trao tình duyên rồi</Typography>
-              <Typography paragraph>
-                giờ người xem ta giống như đùa vui thôi
-              </Typography>
-              <Typography paragraph>mắt em hững hờ</Typography>
-              <Typography paragraph>có ai nào đâu ngờ</Typography>
-              <Typography paragraph>1 ngày 2 ta cách xa</Typography>
-              <Typography paragraph>còn ai chờ</Typography>
-              <Typography paragraph></Typography>
-              <Typography paragraph>Và anh biết duyên mình đã lỡ</Typography>
-              <Typography paragraph>phận bọt bèo đâu dám mơ</Typography>
-              <Typography paragraph>trèo cao té đau</Typography>
-              <Typography paragraph>đành lui về sau</Typography>
-              <Typography paragraph>Biết mai này ta mất nhau</Typography>
-              <br />
-              <Typography paragraph>
-                Phận duyên ta ngắn đành thôi từ đây
-              </Typography>
-              <Typography paragraph>một mình anh lê bước về</Typography>
-              <Typography paragraph>câu hứa câu thề</Typography>
-              <Typography paragraph>mãi chôn vùi trong cơn mê</Typography>
-              <Typography paragraph>Nhìn em sanh đôi cùng duyên mới</Typography>
-              <Typography paragraph>lòng anh đau thắt nghẹn lời</Typography>
-              <Typography paragraph>
-                dẫu biết không thuộc về nhau nhưng sao lòng còn nhớ
-              </Typography>
-              <br />
-              <Typography paragraph>em về nới chốn khuê phòng </Typography>
-              <Typography paragraph>anh về nước mắt tuôn dòng</Typography>
-              <Typography paragraph>
-                chúc phúc cho em cùng người đến sau như đợi mong{" "}
-              </Typography>
-              <br />
-              <Typography paragraph>
-                dẫu biết là kết thúc chẳng níu kéo sao vẫn đợi
-              </Typography>
-              <Typography paragraph>
-                xoá hết từng kí ức từng nỗi nhớ đau thấu trời{" "}
-              </Typography>
-              <Typography paragraph>
-                anh sẽ chẳng khóc nữa chẳng yếu đuối đâu hỡi người
-              </Typography>
-              <Typography paragraph>
-                chúc em bình yên thôi bước đi đi môi cười tươi
-              </Typography>
-              <br />
-              <Typography paragraph>mãi còn đó </Typography>
-              <Typography paragraph>tình anh dành cho </Typography>
-              <Typography paragraph>
-                ngồi đợi trông ngày hình bóng e sang đò
-              </Typography>
-              <br />
-              <Typography paragraph>pháo hồng cưới</Typography>
-              <Typography paragraph>nhìn em cười tươi</Typography>
-              <Typography paragraph>
-                lệ trong tim trào dâng lòng anh đau ngàn đau
-              </Typography>
-              <br />
+              <Stack
+                sx={{
+                  animation: `${leftAnimation} 1200ms ease-in-out infinite alternate`,
+                  width: { xs: "100px", lg: "200px" },
+                  height: { xs: "100px", lg: "200px" },
+                  zIndex: 1,
+                  position: "absolute",
+                  right: "50%",
+                }}
+              >
+                <Image
+                  src={"/image/loading-left.png"}
+                  alt="image"
+                  width={300}
+                  height={500}
+                />
+              </Stack>
+              <Stack
+                sx={{
+                  background: "aqua",
+                  width: { xs: "100px", sm: "130px", lg: "200px" },
+                  height: { xs: "100px", sm: "130px", lg: "200px" },
+                  borderRadius: "50%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 2,
+                }}
+              >
+                <Stack
+                  sx={{
+                    width: "75%",
+                    height: "75%",
+                    borderRadius: "50%",
+                    objectFit: "contain",
+                    border: "3px solid #fff",
+                    p: "15px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    bgcolor: "rgba(0,0,0,.8)",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: "30px",
+                      lineHeight: "20px",
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  >
+                    2023
+                  </Typography>
+                </Stack>
+              </Stack>
+              <Stack
+                sx={{
+                  animation: `${rightAnimation} 1200ms ease-in-out infinite alternate`,
+                  width: { xs: "100px", lg: "200px" },
+                  height: { xs: "100px", lg: "200px" },
+                  zIndex: 3,
+                  position: "absolute",
+                }}
+              >
+                <Image
+                  src={"/image/loading-right.png"}
+                  alt="image"
+                  width={300}
+                  height={500}
+                />
+              </Stack>
             </Stack>
           </Stack>
-        </Main>
-      </Box>
+        </Stack>
+      </Stack>
     </>
   );
 }
