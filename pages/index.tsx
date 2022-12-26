@@ -7,6 +7,9 @@ import React, { useEffect, useState } from "react";
 // import /image/loading-right.png from "/image/loading-right.png";
 // import bgImage from "/image/phap_hoa.jpg";
 import style from "../styles/Home.module.css";
+import Particles from "react-particles";
+import { loadFireworksPreset } from "tsparticles-preset-fireworks";
+import type { Container, Engine } from "tsparticles-engine";
 
 export default function Home() {
   const mountedStyle = { opacity: 1, transition: "opacity 500ms ease-in" };
@@ -31,19 +34,6 @@ export default function Home() {
             transform: translateX(63%) translateY(52%);
         }
     `;
-  const fireworkAnimation = keyframes`0% { 
-    transform: translate(-50%, 60vh);
-    width: 0.5vmin;
-    opacity: 1;
-  }
-  50% { 
-    width: 0.5vmin;
-    opacity: 1;
-  }
-  100% { 
-    width: 45vmin; 
-    opacity: 0; 
-  }`;
   useEffect(() => {
     let p: any = document.querySelector(".newYear");
     const tet = new Date("1/1/2023 00:00:00").getTime();
@@ -82,6 +72,12 @@ export default function Home() {
       }
     };
   }, []);
+  const customInit = async (engine: Engine): Promise<void> => {
+    await loadFireworksPreset(engine);
+  };
+  const options = {
+    preset: "fireworks",
+  };
   return (
     <>
       <Head>
@@ -106,7 +102,6 @@ export default function Home() {
         }}
         // className={style.firework}
       >
-        <Stack className={style.firework}></Stack>
         <Stack>
           <Stack
             sx={[
@@ -124,11 +119,19 @@ export default function Home() {
               },
             ]}
           >
+            <Stack sx={{ zIndex: 1, position: "absolute" }}>
+              <Particles
+                id="tsparticles"
+                init={customInit}
+                //   loaded={particlesLoaded}
+                options={options}
+              />
+            </Stack>
             <Stack
               sx={{
                 justifyContent: "center",
                 alignItems: "center",
-                zIndex: 1,
+                zIndex: 2,
                 flexDirection: "row",
                 borderTop: "1px solid white",
                 borderBottom: "1px solid white",
@@ -162,7 +165,7 @@ export default function Home() {
                   animation: `${leftAnimation} 1200ms ease-in-out infinite alternate`,
                   width: { xs: "100px", lg: "200px" },
                   height: { xs: "100px", lg: "200px" },
-                  zIndex: 1,
+                  zIndex: 2,
                   position: "absolute",
                   right: "50%",
                 }}
@@ -182,7 +185,7 @@ export default function Home() {
                   borderRadius: "50%",
                   alignItems: "center",
                   justifyContent: "center",
-                  zIndex: 2,
+                  zIndex: 3,
                 }}
               >
                 <Stack
@@ -215,7 +218,7 @@ export default function Home() {
                   animation: `${rightAnimation} 1200ms ease-in-out infinite alternate`,
                   width: { xs: "100px", lg: "200px" },
                   height: { xs: "100px", lg: "200px" },
-                  zIndex: 3,
+                  zIndex: 4,
                   position: "absolute",
                 }}
               >
