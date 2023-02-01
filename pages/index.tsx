@@ -203,7 +203,7 @@ export default function Home() {
                 >
                   <Typography
                     sx={{
-                      fontSize: "30px",
+                      fontSize: { xs: "25px", sm: "30px" },
                       lineHeight: "20px",
                       fontWeight: "bold",
                       color: "white",

@@ -1,28 +1,35 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "paths": {
-      "@/entities/*": ["./src/entities/*"],
-      "@/enum/*": ["./src/enum/*"],
-      "@/dto/*": ["./src/dto/*"],
-      "@/utils/*": ["./src/utils/*"],
-      "@/view-entities/*": ["./src/view-entities/*"],
-      "@/imagePub/*": ["./public/image/*"]
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "module": "esnext",
+        "baseUrl": ".",
+        "paths": {
+            "@/entities/*": ["./src/entities/*"],
+            "@/enum/*": ["./src/enum/*"],
+            "@/dto/*": ["./src/dto/*"],
+            "@/ultis/*": ["./utils/*"],
+            "@/api/*": ["./api-client/*"],
+            "@/view-entities/*": ["./src/view-entities/*"],
+            "@/models/*": ["./models/*"],
+            "@/hooks/*": ["./hooks/*"],
+            "@/imagePub/*": ["./public/image/*"],
+            "@/moc/*": ["./mocks/*"],
+            "@/components/*": ["./components/*"],
+            "@/redux/*": ["./store/*"]
+        },
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "incremental": true
     },
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "exclude": ["node_modules"]
 }
