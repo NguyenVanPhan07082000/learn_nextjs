@@ -1,20 +1,23 @@
-import { Avatar, keyframes, Stack, Typography } from "@mui/material";
-import Head from "next/head";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { Avatar, keyframes, Stack, Typography } from '@mui/material';
+import Head from 'next/head';
+import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 // import /image/loading-left.png from "/image/loading-left.png";
 // import avatar from "/image/avatar.jpg";
 // import /image/loading-right.png from "/image/loading-right.png";
 // import bgImage from "/image/phap_hoa.jpg";
-import style from "../styles/Home.module.css";
-import Particles from "react-particles";
-import { loadFireworksPreset } from "tsparticles-preset-fireworks";
-import type { Container, Engine } from "tsparticles-engine";
+import style from '../styles/Home.module.css';
+import Particles from 'react-particles';
+import { loadFireworksPreset } from 'tsparticles-preset-fireworks';
+import type { Container, Engine } from 'tsparticles-engine';
+import AudioPlayer from '@/components/AudioPlayer';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  const mountedStyle = { opacity: 1, transition: "opacity 500ms ease-in" };
-
-  const leftAnimation = keyframes`
+    const mountedStyle = { opacity: 1, transition: 'opacity 500ms ease-in' };
+    const router = useRouter();
+    const leftAnimation = keyframes`
         0% 
         {
             transform: translateX(-90%) translateY(-10%);
@@ -24,7 +27,7 @@ export default function Home() {
             transform: translateX(-94%) translateY(-13%);
         }
     `;
-  const rightAnimation = keyframes`
+    const rightAnimation = keyframes`
         0% 
         {
             transform: translateX(60%) translateY(50%);
@@ -34,205 +37,233 @@ export default function Home() {
             transform: translateX(63%) translateY(52%);
         }
     `;
-  useEffect(() => {
-    let p: any = document.querySelector(".newYear");
-    const tet = new Date("1/1/2023 00:00:00").getTime();
-    //Tổng số giây
-    let countDown = setInterval(() => run(), 1000);
-    const run = () => {
-      const now = new Date().getTime();
-      //Số s đến thời gian hiện tại
-      const timeRest = tet - now;
-      //Số s còn lại để đến tết;
-      const day = Math.floor(timeRest / (1000 * 60 * 60 * 24));
-      //Số ngày còn lại
-      const hours = Math.floor(
-        (timeRest % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      // Số giờ còn lại
-      const minute = Math.floor((timeRest % (1000 * 60 * 60)) / (1000 * 60));
-      // Số phút còn lại
-      const sec = Math.floor((timeRest % (1000 * 60)) / 1000);
-      // Số giây còn lại
-      const CheckHour = hours / 10 >= 1 ? hours : "0" + hours;
-      const CheckMinute = minute / 10 >= 1 ? minute : "0" + minute;
-      const CheckSec = sec / 10 >= 1 ? sec : "0" + sec;
-      p.innerHTML =
-        day +
-        " Ngày " +
-        CheckHour +
-        " : " +
-        CheckMinute +
-        " : " +
-        CheckSec +
-        "  ";
-      if (timeRest <= 0 && countDown) {
-        clearInterval(countDown);
-        p.innerHTML = "HPNY";
-      }
+    useEffect(() => {
+        let p: any = document.querySelector('.newYear');
+        let tet = new Date(new Date().getFullYear() + 1 + '-01-01 00:00:00').getTime();
+        if (new Date().getMonth() <= 1) {
+            tet = new Date(new Date().getFullYear() + '-01-01 00:00:00').getTime();
+        }
+        // const tet = new Date('1/1/2024 00:00:00').getTime();
+        //Tổng số giây
+        let countDown = setInterval(() => run(), 1000);
+        const run = () => {
+            const now = new Date().getTime();
+            //Số s đến thời gian hiện tại
+            const timeRest = tet - now;
+            //Số s còn lại để đến tết;
+            const day = Math.floor(timeRest / (1000 * 60 * 60 * 24));
+            //Số ngày còn lại
+            const hours = Math.floor((timeRest % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            // Số giờ còn lại
+            const minute = Math.floor((timeRest % (1000 * 60 * 60)) / (1000 * 60));
+            // Số phút còn lại
+            const sec = Math.floor((timeRest % (1000 * 60)) / 1000);
+            // Số giây còn lại
+            const CheckHour = hours / 10 >= 1 ? hours : '0' + hours;
+            const CheckMinute = minute / 10 >= 1 ? minute : '0' + minute;
+            const CheckSec = sec / 10 >= 1 ? sec : '0' + sec;
+            p.innerHTML =
+                day + ' Ngày ' + CheckHour + ' : ' + CheckMinute + ' : ' + CheckSec + '  ';
+            if (timeRest <= 0 && countDown) {
+                clearInterval(countDown);
+                p.innerHTML = 'Happy New Year 2024';
+            }
+        };
+    }, []);
+
+    const customInit = async (engine: Engine): Promise<void> => {
+        await loadFireworksPreset(engine);
     };
-  }, []);
-  const customInit = async (engine: Engine): Promise<void> => {
-    await loadFireworksPreset(engine);
-  };
-  const options = {
-    preset: "fireworks",
-  };
-  return (
-    <>
-      <Head>
-        <title>Home</title>
-        <meta name="description" content="Generated by create next app" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* <link rel="icon" href="/favicon.ico" /> */}
-      </Head>
-      <Stack
-        sx={{
-          opacity: 1,
-          transition: "opacity 500ms ease-in",
-          touchAction: "manipulation !important",
-          WebkitTouchCallout: "none" /* iOS Safari */,
-          WebkitUserSelect: "none" /* Safari */,
-          KhtmlUserSelect: "none" /* Konqueror HTML */,
-          MozUserSelect: "none" /* Old versions of Firefox */,
-          msUserSelect: "none" /* Internet Explorer/Edge */,
-          userSelect: "none" /* Non-prefixed version, currently
+    const options = {
+        preset: 'fireworks',
+    };
+    return (
+        <>
+            <Head>
+                <title>Home</title>
+                <meta name="description" content="Generated by create next app" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                {/* <link rel="icon" href="/favicon.ico" /> */}
+            </Head>
+            <Stack
+                sx={{
+                    opacity: 1,
+                    transition: 'opacity 500ms ease-in',
+                    touchAction: 'manipulation !important',
+                    WebkitTouchCallout: 'none' /* iOS Safari */,
+                    WebkitUserSelect: 'none' /* Safari */,
+                    KhtmlUserSelect: 'none' /* Konqueror HTML */,
+                    MozUserSelect: 'none' /* Old versions of Firefox */,
+                    msUserSelect: 'none' /* Internet Explorer/Edge */,
+                    userSelect: 'none' /* Non-prefixed version, currently
                                               supported by Chrome, Edge, Opera and Firefox */,
-          position: "relative",
-        }}
-        // className={style.firework}
-      >
-        <Stack>
-          <Stack
-            sx={[
-              // isMounted ? mountedStyle : unmountedStyle,
-              mountedStyle,
-              {
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                alignItems: "center",
-                justifyContent: "center",
-                background: "#000",
-              },
-            ]}
-          >
-            <Stack sx={{ zIndex: 1, position: "absolute" }}>
-              <Particles
-                id="tsparticles"
-                init={customInit}
-                //   loaded={particlesLoaded}
-                options={options}
-              />
-            </Stack>
-            <Stack
-              sx={{
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: 2,
-                flexDirection: "row",
-                borderTop: "1px solid white",
-                borderBottom: "1px solid white",
-                pb: 2,
-                pt: 2,
-              }}
+                    position: 'relative',
+                }}
+                // className={style.firework}
             >
-              <Typography
-                sx={{
-                  fontSize: "30px",
-                  lineHeight: "20px",
-                  fontWeight: "bold",
-                  color: "white",
-                  pl: 2,
-                  pr: 2,
-                }}
-                className="newYear"
-              ></Typography>
-            </Stack>
-            <Stack
-              sx={{
-                width: { xs: "120px", sm: "150px", lg: "250px" },
-                height: { xs: "120px", sm: "150px", lg: "250px" },
-                position: "relative",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Stack
-                sx={{
-                  animation: `${leftAnimation} 1200ms ease-in-out infinite alternate`,
-                  width: { xs: "100px", lg: "200px" },
-                  height: { xs: "100px", lg: "200px" },
-                  zIndex: 2,
-                  position: "absolute",
-                  right: "50%",
-                }}
-              >
-                <Image
-                  src={"/image/loading-left.png"}
-                  alt="image"
-                  width={300}
-                  height={500}
-                />
-              </Stack>
-              <Stack
-                sx={{
-                  background: "aqua",
-                  width: { xs: "100px", sm: "130px", lg: "200px" },
-                  height: { xs: "100px", sm: "130px", lg: "200px" },
-                  borderRadius: "50%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  zIndex: 3,
-                }}
-              >
-                <Stack
-                  sx={{
-                    width: "75%",
-                    height: "75%",
-                    borderRadius: "50%",
-                    objectFit: "contain",
-                    border: "3px solid #fff",
-                    p: "15px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    bgcolor: "rgba(0,0,0,.8)",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: { xs: "25px", sm: "30px" },
-                      lineHeight: "20px",
-                      fontWeight: "bold",
-                      color: "white",
-                    }}
-                  >
-                    2023
-                  </Typography>
+                <Stack sx={{ color: 'white', position: 'absolute', zIndex: 99, right: 0 }}>
+                    <Stack
+                        sx={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            bgcolor: 'rgba(128, 128, 128, 0.9)',
+                            borderRadius: '100%',
+                            width: '50px',
+                            height: '50px',
+                            mt: 2,
+                            cursor: 'pointer',
+                            '&:hover': {
+                                bgcolor: 'rgba(128, 128, 128, 0.5)',
+                            },
+                        }}
+                        onClick={() => {
+                            router.push('/music');
+                        }}
+                    >
+                        <NavigateNextIcon sx={{ fontSize: 35 }} />
+                        <NavigateNextIcon sx={{ fontSize: 30, ml: -2.8 }} />
+                    </Stack>
                 </Stack>
-              </Stack>
-              <Stack
-                sx={{
-                  animation: `${rightAnimation} 1200ms ease-in-out infinite alternate`,
-                  width: { xs: "100px", lg: "200px" },
-                  height: { xs: "100px", lg: "200px" },
-                  zIndex: 4,
-                  position: "absolute",
-                }}
-              >
-                <Image
-                  src={"/image/loading-right.png"}
-                  alt="image"
-                  width={300}
-                  height={500}
-                />
-              </Stack>
+                <Stack>
+                    <Stack
+                        sx={[
+                            // isMounted ? mountedStyle : unmountedStyle,
+                            mountedStyle,
+                            {
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                background: '#000',
+                            },
+                        ]}
+                    >
+                        <Stack sx={{ zIndex: 1, position: 'absolute' }}>
+                            <Particles
+                                id="tsparticles"
+                                init={customInit}
+                                //   loaded={particlesLoaded}
+                                options={options}
+                            />
+                        </Stack>
+                        <Stack
+                            sx={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                zIndex: 2,
+                                flexDirection: 'row',
+                                borderTop: '1px solid white',
+                                borderBottom: '1px solid white',
+                                pb: 2,
+                                pt: 2,
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    fontSize: '30px',
+                                    lineHeight: '20px',
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    pl: 2,
+                                    pr: 2,
+                                }}
+                                className="newYear"
+                            ></Typography>
+                        </Stack>
+                        <Stack
+                            sx={{
+                                width: { xs: '120px', sm: '150px', lg: '250px' },
+                                height: { xs: '120px', sm: '150px', lg: '250px' },
+                                position: 'relative',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Stack
+                                sx={{
+                                    animation: `${leftAnimation} 1200ms ease-in-out infinite alternate`,
+                                    width: { xs: '100px', lg: '200px' },
+                                    height: { xs: '100px', lg: '200px' },
+                                    zIndex: 2,
+                                    position: 'absolute',
+                                    right: '50%',
+                                }}
+                            >
+                                <Image
+                                    src={'/image/loading-left.png'}
+                                    alt="image"
+                                    width={300}
+                                    height={500}
+                                />
+                            </Stack>
+                            <Stack
+                                sx={{
+                                    background: 'aqua',
+                                    width: { xs: '100px', sm: '130px', lg: '200px' },
+                                    height: { xs: '100px', sm: '130px', lg: '200px' },
+                                    borderRadius: '50%',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    zIndex: 3,
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                    const audio = new Audio('/TetLaTet-ThuyKhanh_4j23e.mp3');
+                                    audio.play();
+                                }}
+                            >
+                                <Stack
+                                    sx={{
+                                        width: '75%',
+                                        height: '75%',
+                                        borderRadius: '50%',
+                                        objectFit: 'contain',
+                                        border: '3px solid #fff',
+                                        p: '15px',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        bgcolor: 'rgba(0,0,0,.8)',
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{
+                                            fontSize: { xs: '25px', sm: '30px' },
+                                            lineHeight: '20px',
+                                            fontWeight: 'bold',
+                                            color: 'white',
+                                        }}
+                                    >
+                                        2023
+                                    </Typography>
+                                </Stack>
+                            </Stack>
+                            <Stack
+                                sx={{
+                                    animation: `${rightAnimation} 1200ms ease-in-out infinite alternate`,
+                                    width: { xs: '100px', lg: '200px' },
+                                    height: { xs: '100px', lg: '200px' },
+                                    zIndex: 4,
+                                    position: 'absolute',
+                                }}
+                            >
+                                <Image
+                                    src={'/image/loading-right.png'}
+                                    alt="image"
+                                    width={300}
+                                    height={500}
+                                />
+                            </Stack>
+                        </Stack>
+                    </Stack>
+                </Stack>
+                {/* <Stack>
+                    <AudioPlayer source="/TetLaTet-ThuyKhanh_4j23e.mp3" autoPlay={true} />
+                </Stack> */}
             </Stack>
-          </Stack>
-        </Stack>
-      </Stack>
-    </>
-  );
+        </>
+    );
 }
